@@ -7,11 +7,31 @@ import os
 st.set_page_config(page_title="Movie Recommender System", layout="wide")
 
 # --- Utility: Download from Google Drive ---
-def download_file_from_google_drive(file_id, dest_path):
-    URL = f"https://drive.google.com/uc?export=download&id={file_id}"
-    response = requests.get(URL)
-    with open(dest_path, "wb") as f:
-        f.write(response.content)
+def download_file_from_google_drive(file_id, destination):
+    URL = "https://docs.google.com/uc?export=download"
+
+    session = requests.Session()
+    response = session.get(URL, params={'id': file_id}, stream=True)
+
+    # Get confirmation token for large files
+    def get_confirm_token(response):
+        for key, value in response.cookies.items():
+            if key.startswith('download_warning'):
+                return value
+        return None
+
+    token = get_confirm_token(response)
+
+    if token:
+        params = {'id': file_id, 'confirm': token}
+        response = session.get(URL, params=params, stream=True)
+
+    CHUNK_SIZE = 32768
+    with open(destination, "wb") as f:
+        for chunk in response.iter_content(CHUNK_SIZE):
+            if chunk:
+                f.write(chunk)
+
 
 # --- Download pickle files if not already available ---
 if not os.path.exists("movie_dict.pkl"):
