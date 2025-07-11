@@ -28,12 +28,12 @@ def download_file_from_google_drive(file_id, destination):
 if not os.path.exists("movie_dict.pkl"):
     download_file_from_google_drive("1YRnkQWvKLRBuYEEuRKr_3aSs6CJtOS_P", "movie_dict.pkl")
 
-if not os.path.exists("similirity.pkl"):
-    download_file_from_google_drive("1b-7pReOsOBD1a__hQVj0ZI8E0a3wauXL", "similirity.pkl")
+if not os.path.exists("similarity.pkl"):
+    download_file_from_google_drive("1b-7pReOsOBD1a__hQVj0ZI8E0a3wauXL", "similarity.pkl")
 
 # Load files
 movies = pickle.load(open('movie_dict.pkl', 'rb'))
-similarity = pickle.load(open('similirity.pkl', 'rb'))
+similarity = pickle.load(open('similarity.pkl', 'rb'))
 movies_df = pd.DataFrame(movies)
 
 
